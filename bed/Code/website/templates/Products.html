@@ -1,0 +1,30 @@
+{%extends 'Base.html'%} {%block title%}Products{%endblock%} {%block content%}
+
+<div class="container">
+  {%for product in products%}
+  <div
+    class="d-flex flex-row align-items-center justify-content-between col-5 mx-auto"
+  >
+    <h2>{{product.productName}}</h2>
+    <h3>{{product.productId}}</h3>
+    <h4>${{product.rate}}</h4>
+    <h4>{{product.categoryId}}</h4>
+
+    <h4>
+      {%if category.categoryId == product.categoryId%}
+      {{category.categoryName}}{%endif%}
+    </h4>
+    <div class="d-flex flex-row">
+      <button class="btn btn-danger me-2">Delete</button>
+      <button class="btn btn-warning">Edit</button>
+      <a
+        href="/api/addToCart?id={{product.productId}}&quantity=5"
+        class="btn btn-outline-primary ms-2"
+        >Add To Cart</a
+      >
+    </div>
+  </div>
+  {%endfor%}
+</div>
+
+{%endblock%}
