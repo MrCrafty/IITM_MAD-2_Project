@@ -1,49 +1,26 @@
-from flask import Flask
-from flask_login import LoginManager
-from werkzeug.security import generate_password_hash
-from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
 
 db = SQLAlchemy()
-DB_NAME = 'database.db'
 
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, resources={r'/*': {'origins': '*'}})
     app.secret_key = "this is the secret key for the app"
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    db.init_app(app)
-
-    # Login manager initializing and defining user_loader function to return the active user
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-    from .models import User
-
-    @login_manager.user_loader
-    def user_loader(id):
-        return User.query.get(int(id))
-
-    # Loading and registering Routes that are created in different files
-    from .views import views
-    app.register_blueprint(views, url_prefix="/")
-    from .auth import auth
-    app.register_blueprint(auth, url_prefix="/")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     from .api import api
     app.register_blueprint(api, url_prefix="/api")
+    db.init_app(app)
     create_database(app)
-    with app.app_context():
-        manager = User.query.filter_by(email="admin@store.com").all()
-        if (manager == []):
-            new_user = User(email="admin@store.com",
-                            password=generate_password_hash("adminmanager"), role="manager")
-            db.session.add(new_user)
-            db.session.commit()
     return app
 
 
 def create_database(app):
-    if not path.exists('./' + DB_NAME):
+    if not path.exists('./database.db'):
         with app.app_context():
             db.create_all()
         print("Database created Successfully")

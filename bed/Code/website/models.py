@@ -1,26 +1,28 @@
+from website import db
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import UserMixin
-from . import db
-
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    email = db.Column(db.String(150), nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(100))
-    cart = db.Column(db.String(1000))
+from sqlalchemy import DateTime, func
+from flask_security import RoleMixin
 
 
 class Category(db.Model):
-    categoryId = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    categoryName = db.Column(db.String(100), nullable=False)
-    products = db.relationship('Product')
+    categoryId: Mapped[int] = mapped_column(Integer, autoincrement=True,
+                                            unique=True, primary_key=True)
+    categoryName: Mapped[str] = mapped_column(String)
 
 
-class Product(db.Model):
-    productId = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    productName = db.Column(db.String(100), nullable=False)
-    unit = db.Column(db.String(50), nullable=False)
-    rate = db.Column(db.Integer(), nullable=False)
-    quantity = db.Column(db.Integer(), nullable=False)
-    categoryId = db.Column(db.Integer(), db.ForeignKey(
-        'category.categoryId'), nullable=False)
+class User(db.Model, UserMixin):
+    user_id: Mapped[int] = mapped_column(
+        Integer, autoincrement=True, nullable=False, primary_key=True)
+    email: Mapped[str] = mapped_column(String, unique=True)
+    password: Mapped[str] = mapped_column(String)
+    cart = mapped_column(String, default="[]")
+    created_on = mapped_column(
+        DateTime, default=func.now())
+    roles = db.relationship("Role")
+
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
