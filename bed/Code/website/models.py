@@ -7,14 +7,17 @@ from sqlalchemy import DateTime, func, ForeignKey
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
+
+    def get_id(self):
+        return self.user_id
     user_id: Mapped[int] = mapped_column(
         Integer, autoincrement=True, nullable=False, primary_key=True)
-    email: Mapped[str] = mapped_column(String, unique=True)
+    username: Mapped[str] = mapped_column(String, unique=True)
     password: Mapped[str] = mapped_column(String)
     created_on: Mapped[DateTime] = mapped_column(
         DateTime, default=func.now())
-    roles: Mapped[str] = mapped_column(String)
-    issued_books: Mapped[str] = mapped_column(String)
+    role: Mapped[str] = mapped_column(String)
+    issued_books: Mapped[str] = mapped_column(String, default="[{}]")
 
 
 class Section(db.Model):
