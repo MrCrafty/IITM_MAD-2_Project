@@ -29,5 +29,13 @@ class Sections(Resource):
         return json.jsonify("{success: True, message: 'Section added Successfully'}")
 
 
+class Book(Resource):
+    def get(self, book_id):
+        book = Book.query.filter_by(book_id=book_id).first()
+        if (book):
+            return book
+        return "Book not found"
+
+
 def initialize_route(api):
     api.add_resource(Sections, '/section')
