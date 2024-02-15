@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_restful import Api
 
 
 db = SQLAlchemy()
@@ -13,8 +14,6 @@ def create_app():
     CORS(app, resources={r'/*': {'origins': '*'}})
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     app.config["SECRET_KEY"] = "IITM_MAD_Project_2"
-    from .api import api
-    app.register_blueprint(api, url_prefix="/api")
     from .auth import auth
     app.register_blueprint(auth, url_prefix="/auth")
     db.init_app(app)
