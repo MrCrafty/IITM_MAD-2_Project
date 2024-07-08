@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\hmithapara\Desktop\IITM_MAD-2_Project\bed\Code\lib-app
+set VIRTUAL_ENV=D:\IIT Material\IITM_MAD-2_Project\bed\Code\lib-app
 
 if not defined PROMPT set PROMPT=$P$G
 

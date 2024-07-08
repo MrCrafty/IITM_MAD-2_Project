@@ -1,18 +1,20 @@
 <script setup>
+import axios from 'axios'
 async function handleFormSubmit() {
   var username = document.getElementById('username').value
   var password = document.getElementById('password').value
 
-  await fetch('http://localhost:8000/auth/login', {
-    headers: {
-      'content-type': 'application/json'
-    },
-    method: 'POST',
-    body: JSON.stringify({ username: username, password: password })
-  }).then(
-    () => (window.location.href = '/'),
-    () => alert('something went wrong')
-  )
+  await axios
+    .post('http://localhost:8000/login', {
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: { username: username, password: password }
+    })
+    .then(
+      () => (window.location.href = '/'),
+      () => alert('something went wrong')
+    )
 }
 </script>
 <template>
@@ -20,10 +22,10 @@ async function handleFormSubmit() {
     <div class="container">
       <div class="row">
         <div
-          class="login-wrapper col-6 d-flex flex-column justify-content-center align-items-center border-end border-light shadow-lg"
+          class="login-wrapper col-6 d-flex flex-column justify-content-center align-items-center border-end border-light"
         >
           <div class="text-black w-100">
-            <div class="w-75 border border-1 border-white p-5 rounded-4">
+            <div class="w-75 p-5 rounded-4 shadow shadow-lg p-3 mb-5 rounded">
               <h1 class="fs-1 text-light text-center mb-4">Login</h1>
               <form class="d-flex flex-column gap-5" @submit.prevent="handleFormSubmit">
                 <input
@@ -58,7 +60,7 @@ async function handleFormSubmit() {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgb(20, 20, 20);
+  background-color: #2f2d2e;
 }
 input {
   padding: 1rem;
